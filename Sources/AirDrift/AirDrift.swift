@@ -261,8 +261,16 @@ class InputManager {
             case .mouseMoved, .leftMouseDragged, .rightMouseDragged:
                 let dx = event.getIntegerValueField(.mouseEventDeltaX)
                 let dy = event.getIntegerValueField(.mouseEventDeltaY)
-                print("Sending delta: dx=\(dx), dy=\(dy)")
-                webSocketClient.send(message: "{\"type\": \"mouse_move\", \"dx\": \(dx), \"dy\": \(dy)}")
+                
+                if dx != 0 || dy != 0 {
+                    webSocketClient.send(message: "{\"type\": \"mouse_move\", \"dx\": \(dx), \"dy\": \(dy)}")
+                }
+                
+                // Keep the Mac cursor frozen at the left edge if gestures or trackpad drifts it
+                let location = event.location
+                if location.x > leftmostX + 5.0 {
+                    CGWarpMouseCursorPosition(CGPoint(x: leftmostX, y: exitY))
+                }
                 
             case .leftMouseDown:
                 webSocketClient.send(message: "{\"type\": \"mouse_button\", \"button\": \"left\", \"state\": \"down\"}")
