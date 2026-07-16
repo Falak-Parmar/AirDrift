@@ -230,6 +230,33 @@ class InputManager {
                 }
             }
             
+            // Intercept Command key shortcuts for Android system navigation actions
+            if event.flags.contains(.maskCommand) {
+                if type == .keyDown || type == .keyUp {
+                    let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
+                    let state = (type == .keyDown) ? "down" : "up"
+                    
+                    var targetCode: Int? = nil
+                    switch keyCode {
+                    case 4:       // Cmd + H -> Home
+                        targetCode = 10001
+                    case 11, 51:  // Cmd + B / Cmd + Backspace -> Back
+                        targetCode = 10002
+                    case 15, 48:  // Cmd + R / Cmd + Tab -> Recents
+                        targetCode = 10003
+                    case 45:      // Cmd + N -> Notifications
+                        targetCode = 10004
+                    default:
+                        break
+                    }
+                    
+                    if let code = targetCode {
+                        webSocketClient.send(message: "{\"type\": \"keyboard_key\", \"keycode\": \(code), \"state\": \"\(state)\"}")
+                        return nil // Swallow event so macOS doesn't execute Cmd+H, Cmd+B locally
+                    }
+                }
+            }
+            
             switch type {
             case .mouseMoved, .leftMouseDragged, .rightMouseDragged:
                 let dx = event.getIntegerValueField(.mouseEventDeltaX)
