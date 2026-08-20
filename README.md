@@ -93,3 +93,14 @@ Open **Settings** from the menu bar popover (⚙️ icon) or search **AirDrift**
 
 Made by [Falak Parmar](https://github.com/Falak-Parmar)  
 Part of the [Drift](https://github.com/Falak-Parmar/Drift) project.
+
+## Trust & Transparency notes
+
+- **Source & Attribution**: AirDrift is the macOS transmitter component for Project Drift. It intercepts raw user input events utilizing macOS system core graphics hooks (`CGEventTap`).
+- **Motive**: Part of a custom system to enable Universal Control capabilities on non-rooted Android tablets and phones, providing a fluid side-screen pointer environment.
+- **Modifications**: Integrated global event interception, edge boundary logic loops, a SwiftUI preference settings panel, and key translation protocols.
+- **Limitations**:
+  - Requires full macOS system Accessibility authorization to intercept keyboard and pointer events globally.
+  - Abrupt WebSocket disconnections during cursor transition might temporarily leave the system cursor locked to the screen edge until manually unlocked with the `Esc` key or by terminating the app.
+- **Tooling & AI Usage**: This codebase has been developed completely using the Antigravity CLI assistant, as I do not have prior experience with Swift or SwiftUI development. All event interception callbacks, UI views, build scripts, and multi-threaded event handlers were generated and debugged through iterative AI-driven conversations.
+
